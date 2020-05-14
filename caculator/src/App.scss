@@ -1,0 +1,91 @@
+@import url("https://fonts.googleapis.com/css2?family=Old+Standard+TT&display=swap");
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #cfcfcf;
+  padding: 100px;
+  font-family: "Old Standard TT", serif;
+
+  #caculator {
+    background-color: #000000;
+    padding-left: 15px;
+    color: #ffffff;
+    display: grid;
+    grid-template-areas:
+      "display display"
+      "numArea operator"
+      "clearNResult clearNResult";
+
+    .pad {
+      margin-right: 15px;
+      margin-bottom: 15px;
+
+      kbd {
+        display: flex;
+        width: 100px;
+        height: 100px;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.5rem;
+        border-radius: 50%;
+      }
+    }
+
+    #display {
+      height: 200px;
+      grid-area: display;
+      font-size: 3.75rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
+      padding: 15px;
+    }
+
+    #clearNResult {
+      grid-area: clearNResult;
+      display: flex;
+      flex-direction: row;
+      kbd {
+        background-color: #a5a5a5;
+
+        &#clear {
+          width: 330px;
+          border-radius: 50px;
+        }
+      }
+    }
+
+    #numArea {
+      display: flex;
+      flex-direction: row-reverse;
+      flex-wrap: wrap-reverse;
+      width: 345px;
+      grid-area: numArea;
+
+      kbd {
+        background-color: #333333;
+
+        &#zero {
+          width: 215px;
+          border-radius: 50px;
+        }
+      }
+    }
+
+    #operator {
+      grid-area: operator;
+      kbd {
+        background-color: #f1a33c;
+      }
+    }
+  }
+}
