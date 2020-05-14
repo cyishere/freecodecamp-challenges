@@ -10,15 +10,17 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
-  background-color: #cfcfcf;
-  padding: 100px;
+  background-color: #cff7dd;
+  padding-top: 100px;
+  padding-bottom: 100px;
   font-family: "Old Standard TT", serif;
 
   #caculator {
-    background-color: #000000;
+    background-color: #119c63;
     padding-left: 15px;
     color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 20px 20px -10px rgba(127, 175, 151, 1);
     display: grid;
     grid-template-areas:
       "display display"
@@ -37,6 +39,7 @@
         align-items: center;
         font-size: 1.5rem;
         border-radius: 50%;
+        cursor: pointer;
       }
     }
 
@@ -55,7 +58,7 @@
       display: flex;
       flex-direction: row;
       kbd {
-        background-color: #a5a5a5;
+        background-color: #2bc26b;
 
         &#clear {
           width: 330px;
@@ -72,7 +75,8 @@
       grid-area: numArea;
 
       kbd {
-        background-color: #333333;
+        background-color: #fbfffd;
+        color: #618274;
 
         &#zero {
           width: 215px;
@@ -84,7 +88,7 @@
     #operator {
       grid-area: operator;
       kbd {
-        background-color: #f1a33c;
+        background-color: #7dde2f;
       }
     }
   }

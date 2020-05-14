@@ -7,7 +7,7 @@ const ClearNResult = () => {
   return (
     <div id="clearNResult">
       <div className="pad" key-code="67">
-        <kbd id="clear">C</kbd>
+        <kbd id="clear">AC</kbd>
       </div>
       <div className="pad" key-code="187">
         <kbd id="equals">=</kbd>
@@ -53,8 +53,6 @@ function App() {
     </div>
   );
 }
-
-export default App;
 
 const numbers = [
   {
@@ -151,3 +149,5 @@ const operators = [
     order: 4,
   },
 ];
+
+export default App;
