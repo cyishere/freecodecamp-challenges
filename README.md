@@ -1,6 +1,6 @@
 # About
 
-These projects are part of the Project Challenge from [freecodecamp](https://www.freecodecamp.org/). The whole projects could be found on my [CodePen](https://codepen.io/cyishere).
+These repositories are part of the Project Challenges from [freecodecamp](https://www.freecodecamp.org/). The whole projects could be found by the links below.
 
 ## Challeges Projects
 
