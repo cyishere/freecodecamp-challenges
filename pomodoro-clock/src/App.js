@@ -1,4 +1,6 @@
 import React from "react";
+import moment from "moment";
+import momentDurationFormatSetup from "moment-duration-format";
 import "./App.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -9,174 +11,161 @@ import {
   faSyncAlt,
 } from "@fortawesome/free-solid-svg-icons";
 
-const BtnTextPlay = ({ handlePlay }) => (
+const BtnTextPlay = () => (
   // <i className="fas fa-play" onClick={handlePlay}></i>
-  <FontAwesomeIcon icon={faPlay} onClick={handlePlay} />
+  <FontAwesomeIcon icon={faPlay} />
 );
-const BtnTextPause = ({ handlePause }) => (
+const BtnTextPause = () => (
   // <i className="fas fa-pause" onClick={handlePause}></i>
-  <FontAwesomeIcon icon={faPause} onClick={handlePause} />
+  <FontAwesomeIcon icon={faPause} />
 );
 
-let countdown;
+momentDurationFormatSetup(moment);
+
+let countdown = null;
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      time_left: 0.1,
-      break_left: 0.1,
-      timer_running: false,
-      break: false,
-      display: "",
-      count: 0,
-      session_temp: 0,
-      break_temp: 0,
+      currentSessionType: "Session", // "Session" or "Break"
+      breakLength: 60 * 5,
+      sessionLength: 60 * 25,
+      timeLeft: undefined,
+      isStarted: false,
     };
 
-    this.handlePlay = this.handlePlay.bind(this);
-    this.handlePause = this.handlePause.bind(this);
+    this.handleStartStop = this.handleStartStop.bind(this);
     this.handleReset = this.handleReset.bind(this);
-
-    this.handleDecBreakTime = this.handleDecBreakTime.bind(this);
-    this.handleIncBreakTime = this.handleIncBreakTime.bind(this);
-
-    this.handleDecSessionTime = this.handleDecSessionTime.bind(this);
-    this.handleIncSessionTime = this.handleIncSessionTime.bind(this);
+    this.decBreakLength = this.decBreakLength.bind(this);
+    this.incBreakLength = this.incBreakLength.bind(this);
+    this.decSessionLength = this.decSessionLength.bind(this);
+    this.incSessionLength = this.incSessionLength.bind(this);
   }
 
-  timer() {
-    if (this.state.count === 0) {
-      var sessionSec = this.state.time_left * 60;
-      var breakSec = this.state.break_left * 60;
+  decBreakLength() {
+    const newBreakLength = this.state.breakLength - 60;
+    if (newBreakLength < 60) {
+      this.setState({
+        breakLength: 60,
+      });
     } else {
-      sessionSec = this.state.session_temp;
-      breakSec = this.state.break_temp;
+      this.setState({
+        breakLength: newBreakLength,
+      });
     }
+  }
 
-    console.log("点击play后的sessionSec: " + sessionSec);
-    console.log("点击play后的breakSec: " + breakSec);
+  incBreakLength() {
+    const newBreakLength = this.state.breakLength + 60;
 
-    // this.setDisplay(sessionSec);
+    if (newBreakLength >= 3600) {
+      this.setState({
+        breakLength: 3600,
+      });
+    } else {
+      this.setState({
+        breakLength: newBreakLength,
+      });
+    }
+  }
 
-    countdown = setInterval(() => {
-      if (sessionSec >= 0) {
-        if (this.state.count === 0) {
-          console.log("count: " + this.state.count);
-          sessionSec--;
-          this.setDisplay(sessionSec);
-        } else {
-          console.log("count: " + this.state.count);
-          this.setDisplay(sessionSec);
-          sessionSec--;
-        }
+  decSessionLength() {
+    const newSessionLength = this.state.sessionLength - 60;
+    if (newSessionLength < 60) {
+      this.setState({
+        sessionLength: 60,
+        timeLeft: 60,
+      });
+    } else {
+      this.setState({
+        sessionLength: newSessionLength,
+        timeLeft: newSessionLength,
+      });
+    }
+  }
 
-        this.setState({
-          session_temp: sessionSec,
-        });
+  incSessionLength() {
+    const newSessionLength = this.state.sessionLength + 60;
+    if (newSessionLength >= 3600) {
+      this.setState({
+        sessionLength: 3600,
+        timeLeft: 3600,
+      });
+    } else {
+      this.setState({
+        sessionLength: newSessionLength,
+        timeLeft: newSessionLength,
+      });
+    }
+  }
 
-        console.log("sessionSec: " + sessionSec);
-      }
-
-      if (sessionSec === -1) {
-        if (breakSec >= 0) {
-          this.setDisplay(breakSec);
+  handleStartStop() {
+    if (this.state.isStarted) {
+      // stop the countdown
+      clearInterval(countdown);
+      countdown = null;
+      this.setState({
+        isStarted: false,
+      });
+    } else {
+      countdown = setInterval(() => {
+        const newTimeLeft = this.state.timeLeft - 1;
+        if (newTimeLeft >= 0) {
           this.setState({
-            break: true,
-            break_temp: breakSec,
+            timeLeft: newTimeLeft,
+            isStarted: true,
           });
-          breakSec--;
-
-          console.log("breakSec: " + breakSec);
+        } else {
+          // time left is less than zero
+          this.audioBeep.play();
+          // if session:
+          if (this.state.currentSessionType === "Session") {
+            // switch to break
+            this.setState({
+              currentSessionType: "Break",
+              timeLeft: this.state.breakLength,
+              isStarted: true,
+            });
+          }
+          // if break:
+          else if (this.state.currentSessionType === "Break") {
+            this.setState({
+              currentSessionType: "Session",
+              timeLeft: this.state.sessionLength,
+              isStarted: true,
+            });
+          }
         }
-      }
-
-      if (sessionSec === -1 && breakSec === -1) {
-        sessionSec = this.state.time_left * 60;
-        breakSec = this.state.break_left * 60;
-        this.setState({
-          count: this.state.count + 1,
-        });
-      } else if (sessionSec > 0 && breakSec > 0) {
-        this.setState({
-          break: false,
-        });
-      }
-    }, 1000);
+      }, 1000);
+    }
   }
 
-  setDisplay(seconds) {
-    const minutes = Math.floor(seconds / 60);
-    const remainderSeconds = seconds % 60;
-    this.setState({
-      display: `${minutes < 10 ? "0" : ""}${minutes}:${
-        remainderSeconds < 10 ? "0" : ""
-      }${remainderSeconds}`,
-    });
-  }
-
-  stopInterval() {
+  handleReset() {
+    // stop the countdown
     clearInterval(countdown);
-  }
 
-  handlePlay() {
-    if (countdown === undefined) {
-      this.setState({
-        timer_running: true,
-      });
-      this.timer();
-    }
-  }
+    // set the countdown to null
+    countdown = null;
 
-  handlePause() {
-    this.stopInterval();
-    countdown = undefined;
     this.setState({
-      timer_running: false,
+      currentSessionType: "Session",
+      sessionLength: 60 * 25,
+      breakLength: 60 * 5,
+      timeLeft: 60 * 25,
+      isStarted: false,
     });
-  }
 
-  handleReset() {}
-
-  handleDecBreakTime() {
-    if (this.state.break_left > 1) {
-      this.setState({
-        break_left: this.state.break_left - 1,
-      });
-    }
-  }
-
-  handleIncBreakTime() {
-    if (this.state.break_left < 60) {
-      this.setState({
-        break_left: this.state.break_left + 1,
-      });
-    }
-  }
-
-  handleDecSessionTime() {
-    this.setDisplay((this.state.time_left - 1) * 60);
-    if (this.state.time_left > 1) {
-      this.setState({
-        time_left: this.state.time_left - 1,
-      });
-    }
-  }
-
-  handleIncSessionTime() {
-    this.setDisplay((this.state.time_left + 1) * 60);
-    if (this.state.time_left < 60) {
-      this.setState({
-        time_left: this.state.time_left + 1,
-      });
-    }
+    // reset audio
+    this.audioBeep.pause();
+    this.audioBeep.currentTime = 0;
   }
 
   componentDidMount() {
-    this.setDisplay(this.state.time_left * 60);
+    this.setState({
+      timeLeft: this.state.sessionLength,
+    });
   }
-
   render() {
     return (
       <div className="container">
@@ -185,24 +174,14 @@ class App extends React.Component {
             Break Length
           </div>
           <div className="control-content">
-            <button
-              id="break-decrement"
-              onClick={this.handleDecBreakTime}
-              disabled={this.state.timer_running || this.state.break_left === 1}
-            >
+            <button id="break-decrement" onClick={this.decBreakLength}>
               {/* <i className="fas fa-angle-down"></i> */}
               <FontAwesomeIcon icon={faAngleDown} />
             </button>
-            <div id="break-length" value={this.state.break_left}>
-              {this.state.break_left}
+            <div id="break-length">
+              {moment.duration(this.state.breakLength, "s").asMinutes()}
             </div>
-            <button
-              id="break-increment"
-              onClick={this.handleIncBreakTime}
-              disabled={
-                this.state.timer_running || this.state.break_left === 60
-              }
-            >
+            <button id="break-increment" onClick={this.incBreakLength}>
               {/* <i className="fas fa-angle-up"></i> */}
               <FontAwesomeIcon icon={faAngleUp} />
             </button>
@@ -214,46 +193,52 @@ class App extends React.Component {
             Session Length
           </div>
           <div className="control-content">
-            <button
-              id="session-decrement"
-              onClick={this.handleDecSessionTime}
-              disabled={this.state.timer_running || this.state.time_left === 1}
-            >
+            <button id="session-decrement" onClick={this.decSessionLength}>
               {/* <i className="fas fa-angle-down"></i> */}
               <FontAwesomeIcon icon={faAngleDown} />
             </button>
-            <div id="session-length" value={this.state.time_left}>
-              {this.state.time_left}
+            <div id="session-length">
+              {moment.duration(this.state.sessionLength, "s").asMinutes()}
             </div>
-            <button
-              id="session-increment"
-              onClick={this.handleIncSessionTime}
-              disabled={this.state.timer_running || this.state.time_left === 60}
-            >
+            <button id="session-increment" onClick={this.incSessionLength}>
               {/* <i className="fas fa-angle-up"></i> */}
               <FontAwesomeIcon icon={faAngleUp} />
             </button>
           </div>
         </div>
 
-        <div className={this.state.break ? "orange timer-card" : "timer-card"}>
-          <div id="timer-label">{this.state.break ? "Break" : "Session"}</div>
-          <div id="time-left">{this.state.display}</div>
+        <div
+          className={
+            this.state.currentSessionType === "Break"
+              ? "timer-card orange"
+              : "timer-card"
+          }
+        >
+          <div id="timer-label">{this.state.currentSessionType}</div>
+          <div id="time-left">
+            {moment
+              .duration(this.state.timeLeft, "s")
+              .format("mm:ss", { trim: false })}
+          </div>
         </div>
 
         <div className="btn-card">
-          <button id="start_stop">
-            {this.state.timer_running ? (
-              <BtnTextPause handlePause={this.handlePause} />
-            ) : (
-              <BtnTextPlay handlePlay={this.handlePlay} />
-            )}
+          <button id="start_stop" onClick={this.handleStartStop}>
+            {this.state.isStarted ? <BtnTextPause /> : <BtnTextPlay />}
           </button>
-          <button id="reset">
-            <FontAwesomeIcon icon={faSyncAlt} onClick={this.handleReset} />
+          <button id="reset" onClick={this.handleReset}>
+            <FontAwesomeIcon icon={faSyncAlt} />
             {/* <i className="fas fa-sync-alt" onClick={this.handleReset}></i> */}
           </button>
         </div>
+        <audio
+          id="beep"
+          preload="auto"
+          src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav"
+          ref={(audio) => {
+            this.audioBeep = audio;
+          }}
+        />
       </div>
     );
   }

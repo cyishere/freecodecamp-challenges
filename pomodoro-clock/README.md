@@ -1,2 +1,6 @@
-数字如何变成时间
-倒计时如何实现
+# Front End Libraries Projects - Build a Pomodoro Clock
+
+https://www.freecodecamp.org/learn/front-end-libraries/front-end-libraries-projects/build-a-pomodoro-clock
+
+yarn install
+yarn start

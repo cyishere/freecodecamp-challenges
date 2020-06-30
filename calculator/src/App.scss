@@ -15,7 +15,7 @@
   padding-bottom: 100px;
   font-family: "Old Standard TT", serif;
 
-  #caculator {
+  #calculator {
     background-color: #119c63;
     padding-left: 15px;
     color: #ffffff;
@@ -40,17 +40,38 @@
         font-size: 1.5rem;
         border-radius: 50%;
         cursor: pointer;
+
+        &.on {
+          box-shadow: inset 0px 0px 6px 6px rgba(3, 78, 47, 0.28);
+        }
       }
     }
 
-    #display {
+    #displayBox {
+      width: 445px;
       height: 200px;
       grid-area: display;
-      font-size: 3.75rem;
       display: flex;
-      justify-content: flex-end;
-      align-items: flex-end;
+      flex-direction: column;
       padding: 15px;
+      flex-wrap: wrap;
+      word-wrap: break-word;
+      word-break: break-all;
+      text-align: right;
+      #miniDisplay {
+        font-size: 1.5rem;
+        height: 60px;
+        margin-bottom: 10px;
+      }
+
+      #display {
+        font-size: 3.75rem;
+        height: 100px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-end;
+        overflow: hidden;
+      }
     }
 
     #clearNResult {
