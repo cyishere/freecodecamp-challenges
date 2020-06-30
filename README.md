@@ -4,7 +4,7 @@ These projects are part of the Project Challenge from [freecodecamp](https://www
 
 ## Challeges Projects
 
-### Responsive Web Design Projects
+### Responsive Web Design
 
 - [Product Lading Page](https://codepen.io/cyishere/full/GRpvoWO)
 - [Survey Form](https://codepen.io/cyishere/full/oNjweQo)
@@ -12,14 +12,14 @@ These projects are part of the Project Challenge from [freecodecamp](https://www
 - [Technical Documentation Page](https://codepen.io/cyishere/full/JjYybdy)
 - [Personal Portfolio](https://codepen.io/cyishere/full/LYpzyGy)
 
-### Front End Libraries Projects
+### Front End Libraries
 
 - [Random Quote Machine](https://codepen.io/cyishere/full/dyYVwWY)
 - [React Markdown Previewer](https://codepen.io/cyishere/full/KKdXJKE)
 - [Drum Machine](https://codepen.io/cyishere/full/jObxZEy)
 - [Pomodoro Clock](https://codepen.io/cyishere/full/BajRvoa)
 
-### APIs and Microservices Projects
+### APIs and Microservices
 
 - [Timestamp Microservice](https://glitch.com/~cy-fcc-timestamps)
 - [Request Header Parser Microservice](https://glitch.com/~cy-fcc-request-header)
