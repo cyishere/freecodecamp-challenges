@@ -31,6 +31,8 @@ class App extends React.Component {
       break: false,
       display: "",
       count: 0,
+      session_temp: 0,
+      break_temp: 0,
     };
 
     this.handlePlay = this.handlePlay.bind(this);
@@ -45,8 +47,17 @@ class App extends React.Component {
   }
 
   timer() {
-    let sessionSec = this.state.time_left * 60;
-    let breakSec = this.state.break_left * 60;
+    if (this.state.count === 0) {
+      var sessionSec = this.state.time_left * 60;
+      var breakSec = this.state.break_left * 60;
+    } else {
+      sessionSec = this.state.session_temp;
+      breakSec = this.state.break_temp;
+    }
+
+    console.log("点击play后的sessionSec: " + sessionSec);
+    console.log("点击play后的breakSec: " + breakSec);
+
     // this.setDisplay(sessionSec);
 
     countdown = setInterval(() => {
@@ -61,16 +72,22 @@ class App extends React.Component {
           sessionSec--;
         }
 
+        this.setState({
+          session_temp: sessionSec,
+        });
+
         console.log("sessionSec: " + sessionSec);
       }
 
       if (sessionSec === -1) {
         if (breakSec >= 0) {
           this.setDisplay(breakSec);
-          breakSec--;
           this.setState({
             break: true,
+            break_temp: breakSec,
           });
+          breakSec--;
+
           console.log("breakSec: " + breakSec);
         }
       }
