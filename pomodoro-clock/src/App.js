@@ -1,24 +1,13 @@
 import React from "react";
 import moment from "moment";
 import momentDurationFormatSetup from "moment-duration-format";
-import "./App.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faAngleUp,
-  faAngleDown,
-  faPlay,
-  faPause,
-  faSyncAlt,
-} from "@fortawesome/free-solid-svg-icons";
 
-const BtnTextPlay = () => (
-  // <i className="fas fa-play" onClick={handlePlay}></i>
-  <FontAwesomeIcon icon={faPlay} />
-);
-const BtnTextPause = () => (
-  // <i className="fas fa-pause" onClick={handlePause}></i>
-  <FontAwesomeIcon icon={faPause} />
-);
+import "./App.scss";
+
+import BreakLength from "./components/BreakLength";
+import SessionLength from "./components/SessionLength";
+import TimerCard from "./components/TimerCard";
+import StartStopControl from "./components/StartStopControl";
 
 momentDurationFormatSetup(moment);
 
@@ -144,7 +133,6 @@ class App extends React.Component {
   handleReset() {
     // stop the countdown
     clearInterval(countdown);
-
     // set the countdown to null
     countdown = null;
 
@@ -166,71 +154,33 @@ class App extends React.Component {
       timeLeft: this.state.sessionLength,
     });
   }
+
   render() {
     return (
       <div className="container">
-        <div className="break-control control">
-          <div id="break-label" className="control-title">
-            Break Length
-          </div>
-          <div className="control-content">
-            <button id="break-decrement" onClick={this.decBreakLength}>
-              {/* <i className="fas fa-angle-down"></i> */}
-              <FontAwesomeIcon icon={faAngleDown} />
-            </button>
-            <div id="break-length">
-              {moment.duration(this.state.breakLength, "s").asMinutes()}
-            </div>
-            <button id="break-increment" onClick={this.incBreakLength}>
-              {/* <i className="fas fa-angle-up"></i> */}
-              <FontAwesomeIcon icon={faAngleUp} />
-            </button>
-          </div>
-        </div>
+        <BreakLength
+          decBreakLength={this.decBreakLength}
+          breakLength={this.state.breakLength}
+          incBreakLength={this.incBreakLength}
+        />
 
-        <div className="session-control control">
-          <div id="session-label" className="control-title">
-            Session Length
-          </div>
-          <div className="control-content">
-            <button id="session-decrement" onClick={this.decSessionLength}>
-              {/* <i className="fas fa-angle-down"></i> */}
-              <FontAwesomeIcon icon={faAngleDown} />
-            </button>
-            <div id="session-length">
-              {moment.duration(this.state.sessionLength, "s").asMinutes()}
-            </div>
-            <button id="session-increment" onClick={this.incSessionLength}>
-              {/* <i className="fas fa-angle-up"></i> */}
-              <FontAwesomeIcon icon={faAngleUp} />
-            </button>
-          </div>
-        </div>
+        <SessionLength
+          decSessionLength={this.decSessionLength}
+          sessionLength={this.state.sessionLength}
+          incSessionLength={this.incSessionLength}
+        />
 
-        <div
-          className={
-            this.state.currentSessionType === "Break"
-              ? "timer-card orange"
-              : "timer-card"
-          }
-        >
-          <div id="timer-label">{this.state.currentSessionType}</div>
-          <div id="time-left">
-            {moment
-              .duration(this.state.timeLeft, "s")
-              .format("mm:ss", { trim: false })}
-          </div>
-        </div>
+        <TimerCard
+          currentSessionType={this.state.currentSessionType}
+          timeLeft={this.state.timeLeft}
+        />
 
-        <div className="btn-card">
-          <button id="start_stop" onClick={this.handleStartStop}>
-            {this.state.isStarted ? <BtnTextPause /> : <BtnTextPlay />}
-          </button>
-          <button id="reset" onClick={this.handleReset}>
-            <FontAwesomeIcon icon={faSyncAlt} />
-            {/* <i className="fas fa-sync-alt" onClick={this.handleReset}></i> */}
-          </button>
-        </div>
+        <StartStopControl
+          handleStartStop={this.handleStartStop}
+          isStarted={this.state.isStarted}
+          handleReset={this.handleReset}
+        />
+
         <audio
           id="beep"
           preload="auto"
