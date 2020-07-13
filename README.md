@@ -1,6 +1,10 @@
 # About
 
-These repositories are part of the Project Challenges from [freecodecamp](https://www.freecodecamp.org/). The whole projects could be found by the links below.
+This repository is part of the Project Challenges from [freecodecamp](https://www.freecodecamp.org/). The whole projects could be found by the links below.
+
+**And now I get FOUR certifications!!**
+
+![4 Certifications](./images/4-certifications.jpg)
 
 ## Challeges Projects
 
@@ -17,6 +21,7 @@ These repositories are part of the Project Challenges from [freecodecamp](https:
 - [Random Quote Machine](https://codepen.io/cyishere/full/dyYVwWY)
 - [React Markdown Previewer](https://codepen.io/cyishere/full/KKdXJKE)
 - [Drum Machine](https://codepen.io/cyishere/full/jObxZEy)
+- [Calculator](https://codepen.io/cyishere/full/bGVMZyO)
 - [Pomodoro Clock](https://codepen.io/cyishere/full/BajRvoa)
 
 ### APIs and Microservices
