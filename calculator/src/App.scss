@@ -1,3 +1,9 @@
+/*
+ * @Author: chenyang 
+ * @Date: 2020-07-13 10:47:44 
+ * @Last Modified by: chenyang
+ * @Last Modified time: 2020-07-13 10:54:05
+ */
 @import url("https://fonts.googleapis.com/css2?family=Old+Standard+TT&display=swap");
 
 * {
@@ -8,11 +14,11 @@
 
 .container {
   width: 100%;
+  height: 100vh;
   display: flex;
   justify-content: center;
+  align-items: center;
   background-color: #cff7dd;
-  padding-top: 100px;
-  padding-bottom: 100px;
   font-family: "Old Standard TT", serif;
 
   #calculator {
@@ -30,20 +36,28 @@
     .pad {
       margin-right: 15px;
       margin-bottom: 15px;
+      display: flex;
+      width: 100px;
+      height: 100px;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5rem;
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+      font-family: "Old Standard TT", serif;
 
-      kbd {
-        display: flex;
-        width: 100px;
-        height: 100px;
-        justify-content: center;
-        align-items: center;
-        font-size: 1.5rem;
-        border-radius: 50%;
-        cursor: pointer;
+      &:hover {
+        opacity: 0.96;
+      }
 
-        &.on {
-          box-shadow: inset 0px 0px 6px 6px rgba(3, 78, 47, 0.28);
-        }
+      &:active {
+        transform: scale(0.98);
+      }
+
+      &:focus {
+        outline: none;
+        // box-shadow: inset 0px 0px 6px 6px rgba(3, 78, 47, 0.28);
       }
     }
 
@@ -58,6 +72,7 @@
       word-wrap: break-word;
       word-break: break-all;
       text-align: right;
+
       #miniDisplay {
         font-size: 1.5rem;
         height: 60px;
@@ -78,7 +93,8 @@
       grid-area: clearNResult;
       display: flex;
       flex-direction: row;
-      kbd {
+
+      .pad {
         background-color: #2bc26b;
 
         &#clear {
@@ -90,16 +106,16 @@
 
     #numArea {
       display: flex;
-      flex-direction: row-reverse;
-      flex-wrap: wrap-reverse;
+      flex-direction: row;
+      flex-wrap: wrap;
       width: 345px;
       grid-area: numArea;
 
-      kbd {
+      .pad {
         background-color: #fbfffd;
         color: #618274;
 
-        &#zero {
+        &#id0 {
           width: 215px;
           border-radius: 50px;
         }
@@ -108,7 +124,7 @@
 
     #operator {
       grid-area: operator;
-      kbd {
+      .pad {
         background-color: #7dde2f;
       }
     }
