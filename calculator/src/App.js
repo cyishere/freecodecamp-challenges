@@ -2,8 +2,9 @@
  * @Author: chenyang
  * @Date: 2020-07-13 10:47:32
  * @Last Modified by: chenyang
- * @Last Modified time: 2020-07-13 18:27:33
+ * @Last Modified time: 2020-07-13 18:31:23
  */
+// FIXME: after press equals, when press number again, the numbers shouldn't join togerther.
 import React from "react";
 import "./App.scss";
 
