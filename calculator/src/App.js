@@ -2,13 +2,31 @@
  * @Author: chenyang
  * @Date: 2020-07-13 10:47:32
  * @Last Modified by: chenyang
- * @Last Modified time: 2020-07-13 16:26:11
+ * @Last Modified time: 2020-07-13 18:27:33
  */
 import React from "react";
 import "./App.scss";
 
-const numbers = [9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
-const ops = ["+", "-", "*", "/"];
+// const numbers = [9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
+// const ops = ["+", "-", "*", "/"];
+const numbers = [
+  { id: "nine", content: 9 },
+  { id: "eight", content: 8 },
+  { id: "seven", content: 7 },
+  { id: "six", content: 6 },
+  { id: "five", content: 5 },
+  { id: "four", content: 4 },
+  { id: "three", content: 3 },
+  { id: "two", content: 2 },
+  { id: "one", content: 1 },
+  { id: "zero", content: 0 },
+];
+const operators = [
+  { id: "add", content: "+" },
+  { id: "subtract", content: "-" },
+  { id: "multiply", content: "*" },
+  { id: "divide", content: "/" },
+];
 
 class App extends React.Component {
   constructor(props) {
@@ -16,8 +34,7 @@ class App extends React.Component {
 
     this.state = {
       lastPressed: undefined,
-      currentNumber: "0",
-      express: undefined,
+      express: "0",
       operation: undefined,
     };
 
@@ -25,107 +42,100 @@ class App extends React.Component {
   }
 
   handleClick = (e) => {
-    const { lastPressed, currentNumber, express, operation } = this.state;
+    const { lastPressed, express } = this.state;
     const { innerText } = e.target;
-
-    this.setState({
-      lastPressed: innerText,
-    });
-
-    if (!Number.isNaN(Number(innerText))) {
-      if (currentNumber === "0") {
-        this.setState({
-          currentNumber: innerText,
-        });
-      } else if (ops.includes(lastPressed)) {
-        this.setState({
-          currentNumber: innerText,
-        });
-      } else {
-        this.setState({
-          currentNumber: currentNumber + innerText,
-        });
-      }
-
-      return;
-    }
 
     switch (innerText) {
       case "AC":
         this.setState({
-          currentNumber: "0",
-          express: undefined,
-          operation: undefined,
+          express: "0",
         });
         break;
+
+      case "=":
+        const evaluated = eval(express);
+        this.setState({
+          express: evaluated,
+        });
+        break;
+
       case ".":
-        if (!currentNumber.includes(".")) {
+        const splitted = express.split(/[\+\-\*\/]/);
+        const last = splitted.slice(-1)[0];
+
+        if (!last.includes(".")) {
           this.setState({
-            currentNumber: currentNumber + innerText,
+            express: express + ".",
           });
         }
         break;
+
       default:
-        if (!operation) {
-          this.setState({
-            operation: innerText,
-            express: currentNumber,
-            currentNumber: "",
-          });
-        } else if (innerText === "=") {
-          const evaluated = eval(`${express} ${operation} ${currentNumber}`);
-          this.setState({
-            operation: undefined,
-            express: evaluated,
-            currentNumber: evaluated,
-          });
+        let con = undefined;
+        const nums = numbers.map((item) => item.content);
+        const ops = operators.map((item) => item.content);
+
+        if (ops.includes(innerText)) {
+          if (ops.includes(lastPressed) && innerText !== "-") {
+            const lastNumberIdx = express
+              .split("")
+              .reverse()
+              .findIndex((char) => char !== " " && nums.includes(+char));
+            con =
+              express.slice(0, express.length - lastNumberIdx) +
+              ` ${innerText} `;
+          } else {
+            con = `${express} ${innerText} `;
+          }
         } else {
-          const evaluated = eval(`${express} ${operation} ${currentNumber}`);
-          this.setState({
-            operation: innerText,
-            express: evaluated,
-            currentNumber: evaluated,
-          });
+          con = express === "0" ? innerText : express + innerText;
         }
-        break;
+
+        this.setState({
+          express: con,
+        });
     }
+
+    this.setState({
+      lastPressed: innerText,
+    });
   };
 
   render() {
-    const { currentNumber, express, operation } = this.state;
+    const { express } = this.state;
     return (
       <div className="container">
-        <p style={{ position: "absolute", top: 0 }}>
-          {JSON.stringify(this.state)}
-        </p>
         <div id="calculator">
           <div id="displayBox">
-            <div id="miniDisplay">
-              {express} {operation}
-            </div>
-            <div id="display">{currentNumber}</div>
+            {/* <div id="miniDisplay">{express}</div> */}
+            <div id="display">{express}</div>
           </div>
 
           <div id="numArea">
-            {numbers.map((number) => (
+            {numbers.map((item) => (
               <button
                 className="pad"
-                id={`id${number}`}
-                key={number}
+                id={item.id}
+                key={item.id}
                 onClick={this.handleClick}
               >
-                {number}
+                {item.content}
               </button>
             ))}
-            <button className="pad" onClick={this.handleClick}>
+            <button className="pad" id="decimal" onClick={this.handleClick}>
               .
             </button>
           </div>
 
           <div id="operator">
-            {ops.map((op, index) => (
-              <button className="pad" key={index} onClick={this.handleClick}>
-                {op}
+            {operators.map((op) => (
+              <button
+                className="pad"
+                id={op.id}
+                key={op.id}
+                onClick={this.handleClick}
+              >
+                {op.content}
               </button>
             ))}
           </div>
